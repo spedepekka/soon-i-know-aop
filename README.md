@@ -4,6 +4,8 @@ This is the code for my blog post.
 
 TODO: Add link to the post.
 
+**I just wanted to release this code before the weekend, so here it is...(it is not fully there where I intented it to be, but writing the post took more time than I expected)**
+
 ## Backstory
 
 I'm a consultant and I was in an interview with a potential fintech client. They asked me about AOP and how have I used it in the past and what do I know about it. I didn't really know so that part didn't go so well, but here we are learning what is AOP and what one can do with it.
