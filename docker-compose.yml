@@ -23,24 +23,41 @@ services:
     image: sooniknow/service-c-db:latest
     ports:
       - "8083:8080"
-    networks:
-      - backend
-  prometheus:
-    image: prom/prometheus:latest
-    volumes:
-      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-    ports:
-      - "9090:9090"
-    networks:
-      - backend
-  grafana:
-    image: grafana/grafana:latest
-    ports:
-      - "3000:3000"
-    networks:
-      - backend
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgresdb:5432/aopdb
+      - SPRING_DATASOURCE_USERNAME=aopuser
+      - SPRING_DATASOURCE_PASSWORD=aoppass
     depends_on:
-      - prometheus
+      - postgresdb
+    networks:
+      - backend
+  postgresdb:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_DB: aopdb
+      POSTGRES_USER: aopuser
+      POSTGRES_PASSWORD: aoppass
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+  # prometheus:
+  #   image: prom/prometheus:latest
+  #   volumes:
+  #     - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+  #   ports:
+  #     - "9090:9090"
+  #   networks:
+  #     - backend
+  # grafana:
+  #   image: grafana/grafana:latest
+  #   ports:
+  #     - "3000:3000"
+  #   networks:
+  #     - backend
+  #   depends_on:
+  #     - prometheus
 networks:
   backend:
     driver: bridge
