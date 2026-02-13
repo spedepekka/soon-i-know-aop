@@ -7,7 +7,7 @@ plugins {
 
 group = "fi.kranu"
 version = "0.0.1-SNAPSHOT"
-description = "Service B"
+description = "Service C"
 
 java {
 	toolchain {
