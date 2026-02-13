@@ -1,0 +1,189 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-a-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-a-api
+  template:
+    metadata:
+      labels:
+        app: service-a-api
+    spec:
+      containers:
+        - name: service-a-api
+          image: sooniknow/service-a-api:latest
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-a-api
+spec:
+  selector:
+    app: service-a-api
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-b-lol
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-b-lol
+  template:
+    metadata:
+      labels:
+        app: service-b-lol
+    spec:
+      containers:
+        - name: service-b-lol
+          image: sooniknow/service-b-lol:latest
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-b-lol
+spec:
+  selector:
+    app: service-b-lol
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-c-db
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-c-db
+  template:
+    metadata:
+      labels:
+        app: service-c-db
+    spec:
+      containers:
+        - name: service-c-db
+          image: sooniknow/service-c-db:latest
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-c-db
+spec:
+  selector:
+    app: service-c-db
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus
+  template:
+    metadata:
+      labels:
+        app: prometheus
+    spec:
+      containers:
+        - name: prometheus
+          image: prom/prometheus:latest
+          ports:
+            - containerPort: 9090
+          volumeMounts:
+            - name: prometheus-config
+              mountPath: /etc/prometheus/
+      volumes:
+        - name: prometheus-config
+          configMap:
+            name: prometheus-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus
+spec:
+  selector:
+    app: prometheus
+  ports:
+    - protocol: TCP
+      port: 9090
+      targetPort: 9090
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  labels:
+    app: prometheus
+  namespace: default
+
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+    scrape_configs:
+      - job_name: 'service-a-api'
+        static_configs:
+          - targets: ['service-a-api:8080']
+      - job_name: 'service-b-lol'
+        static_configs:
+          - targets: ['service-b-lol:8080']
+      - job_name: 'service-c-db'
+        static_configs:
+          - targets: ['service-c-db:8080']
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grafana
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grafana
+  template:
+    metadata:
+      labels:
+        app: grafana
+    spec:
+      containers:
+        - name: grafana
+          image: grafana/grafana:latest
+          ports:
+            - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: grafana
+spec:
+  selector:
+    app: grafana
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000

@@ -1,0 +1,12 @@
+global:
+  scrape_interval: 15s
+scrape_configs:
+  - job_name: "service-a-api"
+    static_configs:
+      - targets: ["service-a-api:8080"]
+  - job_name: "service-b-lol"
+    static_configs:
+      - targets: ["service-b-lol:8080"]
+  - job_name: "service-c-db"
+    static_configs:
+      - targets: ["service-c-db:8080"]

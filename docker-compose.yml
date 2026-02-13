@@ -1,0 +1,46 @@
+version: "3.8"
+services:
+  service-a-api:
+    build: ./service-a-api
+    image: sooniknow/service-a-api:latest
+    ports:
+      - "8081:8080"
+    depends_on:
+      - service-b-lol
+    networks:
+      - backend
+  service-b-lol:
+    build: ./service-b-lol
+    image: sooniknow/service-b-lol:latest
+    ports:
+      - "8082:8080"
+    depends_on:
+      - service-c-db
+    networks:
+      - backend
+  service-c-db:
+    build: ./service-c-db
+    image: sooniknow/service-c-db:latest
+    ports:
+      - "8083:8080"
+    networks:
+      - backend
+  prometheus:
+    image: prom/prometheus:latest
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9090:9090"
+    networks:
+      - backend
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - "3000:3000"
+    networks:
+      - backend
+    depends_on:
+      - prometheus
+networks:
+  backend:
+    driver: bridge
