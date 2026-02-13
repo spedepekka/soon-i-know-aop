@@ -1,11 +1,11 @@
-package com.sooniknow.aop
+package fi.kranu.servicea
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class ServiceAApiApplication
+class ServiceaApplication
 
 fun main(args: Array<String>) {
-    runApplication<ServiceAApiApplication>(*args)
+	runApplication<ServiceaApplication>(*args)
 }
