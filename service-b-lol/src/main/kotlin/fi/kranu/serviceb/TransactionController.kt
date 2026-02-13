@@ -2,12 +2,12 @@ package fi.kranu.serviceb
 
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.*
-import java.util.concurrent.CopyOnWriteArrayList
+import org.springframework.web.client.RestTemplate
 import kotlin.random.Random
 
 @RestController
-@RequestMapping("/internal-transactions")
-class TransactionController {
+@RequestMapping("/internal-transaction")
+class TransactionController (private val restTemplate: RestTemplate){
     private val logger = LoggerFactory.getLogger(TransactionController::class.java)
 
     @PostMapping
@@ -23,6 +23,8 @@ class TransactionController {
             throw RuntimeException("Transaction handling interrupted", e)
         }
 
-        return transaction
+        val response = restTemplate.postForObject("http://service-c-db:8080/database-transaction", transaction, Transaction::class.java)
+
+        return response ?: throw RuntimeException("Failed to process transaction in service B")
     }
 }
