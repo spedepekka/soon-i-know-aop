@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 pushd service-a-api
 ./gradlew bootjar
 ./docker-build.sh
