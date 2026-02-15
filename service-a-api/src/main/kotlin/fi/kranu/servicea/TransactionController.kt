@@ -1,6 +1,7 @@
 package fi.kranu.servicea
 
 import org.slf4j.LoggerFactory
+import org.slf4j.MDC
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.web.bind.annotation.*
@@ -16,16 +17,21 @@ class TransactionController(private val restTemplate: RestTemplate) {
 
     @PostMapping
     fun handleUserTransaction(@RequestBody transaction: Transaction): Transaction {
-        logger.info("handleUserTransaction called ${transaction}")
+        val correlationId = MDC.get("correlationId")
+        logger.info("handleUserTransaction called with correlationId: $correlationId, transaction: $transaction")
 
-        val correlationId = UUID.randomUUID().toString()
         val headers = HttpHeaders()
-        headers.set("X-Correlation-ID", correlationId)
-        logger.info("Correlation ID: $correlationId")
+        if (correlationId != null) {
+            headers.set("X-Correlation-Id", correlationId)
+        }
 
         val request = HttpEntity(transaction, headers)
+        try {
+            restTemplate.postForObject("http://service-b-lol:8080/internal-transaction", request, Transaction::class.java)
+        } catch (e: Exception) {
+            logger.error("Failed to call service-b", e)
+        }
 
-        restTemplate.postForObject("http://service-b-lol:8080/internal-transaction", request, Transaction::class.java)
         return transaction
     }
 }

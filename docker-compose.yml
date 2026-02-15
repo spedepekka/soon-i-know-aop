@@ -9,6 +9,8 @@ services:
       - service-b-lol
     networks:
       - backend
+    environment:
+      - SPRING_LOGGING_LEVEL_ROOT=DEBUG
   service-b-lol:
     build: ./service-b-lol
     image: sooniknow/service-b-lol:latest
@@ -18,6 +20,8 @@ services:
       - service-c-db
     networks:
       - backend
+    environment:
+      - SPRING_LOGGING_LEVEL_ROOT=DEBUG
   service-c-db:
     build: ./service-c-db
     image: sooniknow/service-c-db:latest
