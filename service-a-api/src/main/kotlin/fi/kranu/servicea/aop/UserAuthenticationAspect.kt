@@ -1,6 +1,6 @@
 package fi.kranu.servicea.aop
 
-import jakarta.servlet.http.HttpServletRequest
+
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.annotation.Before
 import org.slf4j.LoggerFactory
@@ -21,11 +21,11 @@ class UserAuthenticationAspect {
 
         if (userId.isNullOrBlank()) {
             logger.warn("Authentication failed: X-User-Id header is missing")
-            throw SecurityException("User authentication required")
+            throw UnauthorizedException()
         } else if (!userId.equals("dirty-hack")) {
             // This is just a dirty hack for testing purposes. Don't do this in production.
             logger.warn("Wrong secret")
-            throw SecurityException("User authentication required")
+            throw UnauthorizedException()
         }
 
         logger.info("User $userId authenticated successfully")
