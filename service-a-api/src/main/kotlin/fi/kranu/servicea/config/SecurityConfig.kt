@@ -1,4 +1,4 @@
-package fi.kranu.servicea
+package fi.kranu.servicea.config
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
