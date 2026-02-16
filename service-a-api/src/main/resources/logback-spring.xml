@@ -18,6 +18,10 @@
         <appender-ref ref="CONSOLE_WITH_CORRELATION" />
     </logger>
 
+    <logger name="fi.kranu.servicea.aop" level="DEBUG" additivity="false">
+        <appender-ref ref="CONSOLE_WITH_CORRELATION" />
+    </logger>
+
     <root level="INFO">
         <appender-ref ref="CONSOLE" />
     </root>

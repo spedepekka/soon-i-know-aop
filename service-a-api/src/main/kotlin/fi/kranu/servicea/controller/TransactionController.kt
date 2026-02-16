@@ -1,5 +1,6 @@
 package fi.kranu.servicea.controller
 
+import fi.kranu.servicea.aop.CustomAuthentication
 import org.slf4j.LoggerFactory
 import org.slf4j.MDC
 import org.springframework.http.HttpHeaders
@@ -14,6 +15,7 @@ class TransactionController(private val restTemplate: RestTemplate) {
 
     private val logger = LoggerFactory.getLogger(TransactionController::class.java)
 
+    @CustomAuthentication
     @PostMapping
     fun handleUserTransaction(@RequestBody transaction: Transaction): Transaction {
         val correlationId = MDC.get("correlationId")
